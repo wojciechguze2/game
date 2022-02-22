@@ -25,6 +25,9 @@ player_sprite.rect.x, player_sprite.rect.y = 30, 500
 # arrow_sprite = sprites.Player(const.BLACK, 3, 5, const.ARROW_SPRITE_IMAGE_PATH)
 # arrow_sprite.rect.x, arrow_sprite.rect.y = 30, 500
 
+arrows = []
+facing = 1
+
 sprites_list = pygame.sprite.Group(player_sprite)  # , arrow_sprite)
 
 clock = pygame.time.Clock()
@@ -54,7 +57,31 @@ while True:
     if keyPressed[pygame.K_UP] and player_sprite.rect.top > const.WINDOW_PADDING:
         player_sprite.moveUp(const.PLAYER_SPEED)
 
+    if keyPressed[pygame.K_SPACE]:
+        if player_sprite.rect.left:
+            facing = -1
+        else:
+            facing = 1
+
+    if len(arrows) < 2:
+        arrows.append(
+            sprites.Arrow(
+                round(player_sprite.rect.x + player_sprite.rect.width // 2),
+                round(player_sprite.rect.y + player_sprite.rect.height // 2), 6, const.BLACK, facing
+            )
+        )
+
+    for arrow in arrows:
+        if const.WINDOW_POSITION_X > arrow.x > 0:
+            arrow.x += arrow.vel
+        else:
+            arrows.remove(arrow)
+
     sprites_list.update()
     sprites_list.draw(screen)
+
+    for arrow in arrows:  # type: sprites.Arrow
+        pygame.draw.circle(screen, arrow.color, (arrow.x, arrow.y), arrow.radius)
+
     pygame.display.flip()
     fpsClock.tick(fps)
