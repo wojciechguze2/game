@@ -45,18 +45,20 @@ while True:
     if key_pressed[pygame.K_ESCAPE]:
         break
 
-    if key_pressed[pygame.K_LEFT] or key_pressed[pygame.K_a] and player_sprite.rect.left > const.WINDOW_PADDING:
+    if (key_pressed[pygame.K_LEFT] or key_pressed[pygame.K_a]) \
+            and player_sprite.rect.left > const.WINDOW_PADDING:
         player_sprite.moveLeft(const.PLAYER_SPEED)
 
-    if key_pressed[pygame.K_RIGHT] or key_pressed[pygame.K_d] and player_sprite.rect.right < (
-            const.WINDOW_WIDTH - const.WINDOW_PADDING):
+    if (key_pressed[pygame.K_RIGHT] or key_pressed[pygame.K_d]) \
+            and player_sprite.rect.right < (const.WINDOW_WIDTH - const.WINDOW_PADDING):
         player_sprite.moveRight(const.PLAYER_SPEED)
 
-    if key_pressed[pygame.K_DOWN] or key_pressed[pygame.K_s] and player_sprite.rect.bottom < (
-            const.WINDOW_HEIGHT - const.WINDOW_PADDING):
+    if (key_pressed[pygame.K_DOWN] or key_pressed[pygame.K_s]) \
+            and player_sprite.rect.bottom < (const.WINDOW_HEIGHT - const.WINDOW_PADDING):
         player_sprite.moveDown(const.PLAYER_SPEED)
 
-    if key_pressed[pygame.K_UP] or key_pressed[pygame.K_w] and player_sprite.rect.top > const.WINDOW_PADDING:
+    if (key_pressed[pygame.K_UP] or key_pressed[pygame.K_w]) \
+            and player_sprite.rect.top > const.WINDOW_PADDING:
         player_sprite.moveUp(const.PLAYER_SPEED)
 
     if key_pressed[pygame.K_SPACE] and player_sprite.rect.left:  # right click
