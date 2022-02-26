@@ -28,3 +28,9 @@ monospace_12 = ['monospace', 12]
 
 # player
 PLAYER_SPEED = 7
+INIT_PLAYER_X = 30
+INIT_PLAYER_Y = 50
+
+TIME_UNIT = 0.1
+
+MAX_ARROWS_COUNT = 40

@@ -29,8 +29,17 @@ class Player(pygame.sprite.Sprite):
 class Arrow(object):
     def __init__(self, x, y, radius, color, facing):
         self.x = x
+        self.x0 = x
         self.y = y
+        self.y0 = y
         self.radius = radius
         self.color = color
         self.facing = facing
         self.vel = 8 * facing
+        self.weight = 0.5
+        self.gravity = self.weight * 9.8
+        self.time = const.TIME_UNIT
+
+    def gravity_work(self):
+        self.y = self.y0 + self.gravity * self.time ** 2 / 2
+
