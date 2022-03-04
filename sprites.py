@@ -75,10 +75,10 @@ class Opponent(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, self.color, [0, 0, width, height])
 
         self.image_path = const.OPPONENT_SPRITE_IMAGE_PATH
-        resize_image(self.image_path, width, height)
-        self.image = pygame.image.load(self.image_path)
-        self.rect = self.image.get_rect()
+        resized_image_path = resize_image(self.image_path, width, height)
+        self.image = pygame.image.load(resized_image_path)
 
+        self.rect = self.image.get_rect()
         self.rect.x = const.WINDOW_WIDTH - 200
         self.rect.y = randint(const.WINDOW_PADDING, const.WINDOW_HEIGHT - const.WINDOW_PADDING)
 
