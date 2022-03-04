@@ -22,13 +22,12 @@ pygame.display.set_caption("pygame arrow shooting")
 player_sprite = sprites.Player(const.BLACK, 30, 40, const.PLAYER_SPRITE_IMAGE_PATH)
 player_sprite.rect.x, player_sprite.rect.y = const.INIT_PLAYER_X, const.INIT_PLAYER_Y
 
-# arrow_sprite = sprites.Player(const.BLACK, 3, 5, const.ARROW_SPRITE_IMAGE_PATH)
-# arrow_sprite.rect.x, arrow_sprite.rect.y = 30, 500
-
-arrows = []
 facing = 1
 
-sprites_list = pygame.sprite.Group(player_sprite)  # , arrow_sprite)
+opponent_sprite = sprites.Opponent(width=30, height=30, resistance=5, speed=1)
+
+player_group = pygame.sprite.Group(player_sprite)
+opponents_group = pygame.sprite.Group(opponent_sprite)
 
 clock = pygame.time.Clock()
 pygame.display.update()
@@ -84,6 +83,9 @@ while True:
         else:
             pass
 
+    if len(opponents_group) < 1:
+        opponents_group.add(opponent_sprite)
+
     for arrow in arrows:
         arrow.time += const.TIME_UNIT
 
@@ -93,11 +95,20 @@ while True:
         else:
             arrows.remove(arrow)
 
-    sprites_list.update()
-    sprites_list.draw(screen)
-
     for arrow in arrows:  # type: sprites.Arrow
         pygame.draw.circle(screen, arrow.color, (arrow.x, arrow.y), arrow.radius)
+
+    for opponent in opponents_group:
+        opponent: sprites.Opponent
+        opponent.move_towards_player(player_group.sprites()[0].rect, 1)
+        gets_hit = pygame.sprite.spritecollideany(opponent, arrows_group)
+
+    player_group.update()
+    player_group.draw(screen)
+
+
+    opponents_group.update()
+    opponents_group.draw(screen)
 
     pygame.display.flip()
     fpsClock.tick(fps)

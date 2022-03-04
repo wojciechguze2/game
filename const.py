@@ -21,6 +21,7 @@ WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 # image paths
 PLAYER_SPRITE_IMAGE_PATH = './img/main_sprite.jpg'
 ARROW_SPRITE_IMAGE_PATH = './img/arrow_sprite.png'
+OPPONENT_SPRITE_IMAGE_PATH = './img/opponent_sprite.jpg'
 
 # fonts
 monospace_12 = ['monospace', 12]
