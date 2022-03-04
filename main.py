@@ -22,9 +22,10 @@ pygame.display.set_caption("pygame arrow shooting")
 player_sprite = sprites.Player(const.BLACK, 30, 40, const.PLAYER_SPRITE_IMAGE_PATH)
 player_sprite.rect.x, player_sprite.rect.y = const.INIT_PLAYER_X, const.INIT_PLAYER_Y
 
+arrows = []
 facing = 1
 
-opponent_sprite = sprites.Opponent(width=30, height=30, resistance=5, speed=1)
+opponent_sprite = sprites.Opponent(width=const.OPPONENT_WIDTH, height=const.OPPONENT_HEIGHT, resistance=5, speed=1)
 
 player_group = pygame.sprite.Group(player_sprite)
 opponents_group = pygame.sprite.Group(opponent_sprite)
@@ -35,6 +36,7 @@ pygame.display.update()
 while True:
     screen.fill(const.WHITE)
     key_pressed = pygame.key.get_pressed()
+    player_rect = player_group.sprites()[0].rect
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -97,15 +99,14 @@ while True:
 
     for arrow in arrows:  # type: sprites.Arrow
         pygame.draw.circle(screen, arrow.color, (arrow.x, arrow.y), arrow.radius)
+        arrow.check_hit(opponents_group)
 
     for opponent in opponents_group:
         opponent: sprites.Opponent
-        opponent.move_towards_player(player_group.sprites()[0].rect, 1)
-        gets_hit = pygame.sprite.spritecollideany(opponent, arrows_group)
+        opponent.move_towards_player(player_rect, 1)
 
     player_group.update()
     player_group.draw(screen)
-
 
     opponents_group.update()
     opponents_group.draw(screen)
