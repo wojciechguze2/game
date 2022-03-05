@@ -39,7 +39,7 @@ class Arrow(object):
         self.radius = radius
         self.color = color
         self.facing = facing
-        self.vel = 8 * facing
+        self.vel = 28 * facing
         self.weight = 0.5
         self.gravity = self.weight * 9.8
         self.time = const.TIME_UNIT
@@ -66,13 +66,15 @@ class Opponent(pygame.sprite.Sprite):
         super().__init__()
 
         self.color = const.BLACK
-        self.image = pygame.Surface([width, height])
+        self.hit_color = const.RED
+
+        self.surface = pygame.Surface([width, height])
         self.speed = speed
         self.resistance = resistance
 
-        self.image.fill(self.color)
-        self.image.set_colorkey(self.color)
-        pygame.draw.rect(self.image, self.color, [0, 0, width, height])
+        self.surface.fill(self.color)
+        self.surface.set_colorkey(self.color)
+        pygame.draw.rect(self.surface, self.color, [0, 0, width, height])
 
         self.image_path = const.OPPONENT_SPRITE_IMAGE_PATH
         resized_image_path = resize_image(self.image_path, width, height)
@@ -89,14 +91,14 @@ class Opponent(pygame.sprite.Sprite):
         if self.rect.x > player_rect.x:
             self.rect.x -= speed
 
-        if self.rect.y < player_rect.y:
+        if self.rect.y < player_rect.y + player_rect.height / 2.5:
             self.rect.y += speed
 
-        if self.rect.y > player_rect.y:
+        if self.rect.y > player_rect.y + player_rect.height / 2.5:
             self.rect.y -= speed
 
     def get_hit(self):
         self.resistance -= 1
 
         if self.resistance <= 0:
-            ...  # TODO:
+            self.kill()

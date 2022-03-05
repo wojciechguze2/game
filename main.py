@@ -17,7 +17,7 @@ os.environ['SDL_VIDEO_WINDOW_POS'] = '%s, %s' % (const.WINDOW_POSITION_X, const.
 fps = 60
 fpsClock = pygame.time.Clock()
 screen = pygame.display.set_mode(const.WINDOW_SIZE)
-pygame.display.set_caption("pygame arrow shooting")
+pygame.display.set_caption('pygame player vs opponents shooting game')
 
 player_sprite = sprites.Player(const.BLACK, 30, 40, const.PLAYER_SPRITE_IMAGE_PATH)
 player_sprite.rect.x, player_sprite.rect.y = const.INIT_PLAYER_X, const.INIT_PLAYER_Y
@@ -25,10 +25,9 @@ player_sprite.rect.x, player_sprite.rect.y = const.INIT_PLAYER_X, const.INIT_PLA
 arrows = []
 facing = 1
 
-opponent_sprite = sprites.Opponent(width=const.OPPONENT_WIDTH, height=const.OPPONENT_HEIGHT, resistance=5, speed=1)
 
 player_group = pygame.sprite.Group(player_sprite)
-opponents_group = pygame.sprite.Group(opponent_sprite)
+opponents_group = pygame.sprite.Group()
 
 clock = pygame.time.Clock()
 pygame.display.update()
@@ -72,20 +71,27 @@ while True:
             arrows.append(
                 sprites.Arrow(
                     round(player_sprite.rect.x + player_sprite.rect.width // 2),
-                    round(player_sprite.rect.y + player_sprite.rect.height // 2), 6, const.BLACK, facing
+                    round(player_sprite.rect.y + player_sprite.rect.height // 2), 6, const.RED, facing
                 )
             )
         elif not arrows:
             arrows.append(
                 sprites.Arrow(
                     round(player_sprite.rect.x + player_sprite.rect.width // 2),
-                    round(player_sprite.rect.y + player_sprite.rect.height // 2), 6, const.BLACK, facing
+                    round(player_sprite.rect.y + player_sprite.rect.height // 2), 6, const.RED, facing
                 )
             )
         else:
             pass
 
-    if len(opponents_group) < 1:
+    if len(opponents_group) < 2:
+        opponent_sprite = sprites.Opponent(
+            width=const.OPPONENT_WIDTH,
+            height=const.OPPONENT_HEIGHT,
+            resistance=randint(1, 8),
+            speed=1
+        )
+
         opponents_group.add(opponent_sprite)
 
     for arrow in arrows:
@@ -93,7 +99,7 @@ while True:
 
         if arrow.x < const.WINDOW_WIDTH > 0 and arrow.y < const.WINDOW_HEIGHT > 0:
             arrow.x -= arrow.vel
-            arrow.gravity_work()
+            # arrow.gravity_work()
         else:
             arrows.remove(arrow)
 
