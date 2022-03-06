@@ -16,6 +16,8 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, color, [0, 0, width, height])
         self.image = pygame.image.load(image_path)
         self.rect = self.image.get_rect()
+        self.points = 0  # killed_opponents
+        self.health = 100
 
     def moveRight(self, player_ms):
         self.rect.x += player_ms
@@ -48,7 +50,7 @@ class Arrow(object):
     def gravity_work(self):
         self.y = self.y0 + self.gravity * self.time ** 2 / 2
 
-    def check_hit(self, opponents_group: Group):
+    def check_hit(self, opponents_group: Group, player_sprite: Player):
         opponent_sprites = opponents_group.sprites()
 
         for opponent in opponent_sprites:
@@ -57,8 +59,11 @@ class Arrow(object):
             if int(self.x) in range(opponent.rect.x, opponent.rect.x + opponent.rect.width) \
                     and int(self.y) in range(opponent.rect.y, opponent.rect.y + opponent.rect.height) \
                     and not self.hit:
-                opponent.get_hit()
+                killed = opponent.get_hit()
                 self.hit = True
+
+                if killed:
+                    player_sprite.points += 1
 
 
 class Opponent(pygame.sprite.Sprite):
@@ -97,8 +102,25 @@ class Opponent(pygame.sprite.Sprite):
         if self.rect.y > player_rect.y + player_rect.height / 2.5:
             self.rect.y -= speed
 
-    def get_hit(self):
+    def get_hit(self) -> bool:
+        killed = False
+
         self.resistance -= 1
 
         if self.resistance <= 0:
             self.kill()
+
+            killed = True
+
+        return killed
+
+    def attack_player(self, player_sprite: Player, counter: int) -> bool:
+        killed = False
+
+        if self.rect.colliderect(player_sprite) and counter % 10 == 0:  # % 10 to slow down taking life
+            player_sprite.health -= 1
+
+            if player_sprite.health <= 0:
+                player_sprite.kill()
+
+                return killed

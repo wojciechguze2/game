@@ -1,9 +1,11 @@
 # colors
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
+DARK_GREEN = (0, 184, 0)
 BLUE = (0, 0, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+ORANGE = (255, 128, 0)
 
 BACKGROUND_COLOR = WHITE
 
@@ -23,6 +25,7 @@ PLAYER_SPRITE_IMAGE_PATH = './img/main_sprite.jpg'
 ARROW_SPRITE_IMAGE_PATH = './img/arrow_sprite.png'
 OPPONENT_SPRITE_IMAGE_PATH = './img/opponent_sprite.jpg'
 RESIZED_IMAGE_PATH = './img/opponent_sprite_resized.jpg'
+SHOP_ICON_IMAGE_PATH = './img/shop_icon.png'
 
 # fonts
 monospace_12 = ['monospace', 12]
@@ -38,5 +41,9 @@ TIME_UNIT = 0.1
 MAX_ARROWS_COUNT = 40
 
 # opponent
-OPPONENT_WIDTH = 40
-OPPONENT_HEIGHT = 40
+OPPONENT_WIDTH = 50
+OPPONENT_HEIGHT = 50
+
+# shop
+SHOP_WIDTH = 50
+SHOP_HEIGHT = 50
