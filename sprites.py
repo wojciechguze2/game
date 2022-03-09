@@ -1,23 +1,24 @@
 from random import randint
 
-import pygame
-from pygame.sprite import Group
+from pygame import rect, Surface
+from pygame.image import load
+from pygame.sprite import Group, Sprite
 
 import const
 from rules import resize_image
 
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self, color: tuple, width: int, height: int, image_path: str):
+class Player(Sprite):
+    def __init__(self, image_path: str, x=0, y=0):
         super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
-        self.image.set_colorkey(color)
-        pygame.draw.rect(self.image, color, [0, 0, width, height])
-        self.image = pygame.image.load(image_path)
-        self.rect = self.image.get_rect()
+        self.image = load(image_path)
+
         self.points = 0  # killed_opponents
         self.health = 100
+
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def moveRight(self, player_ms):
         self.rect.x += player_ms
@@ -41,7 +42,7 @@ class Arrow(object):
         self.radius = radius
         self.color = color
         self.facing = facing
-        self.vel = 28 * facing
+        self.vel = 14 * facing
         self.weight = 0.5
         self.gravity = self.weight * 9.8
         self.time = const.TIME_UNIT
@@ -66,41 +67,37 @@ class Arrow(object):
                     player_sprite.points += 1
 
 
-class Opponent(pygame.sprite.Sprite):
+class Opponent(Sprite):
     def __init__(self, width: int, height: int, resistance: int, speed: float):
         super().__init__()
 
         self.color = const.BLACK
         self.hit_color = const.RED
 
-        self.surface = pygame.Surface([width, height])
+        self.surface = Surface([width, height])
         self.speed = speed
         self.resistance = resistance
 
-        self.surface.fill(self.color)
-        self.surface.set_colorkey(self.color)
-        pygame.draw.rect(self.surface, self.color, [0, 0, width, height])
-
         self.image_path = const.OPPONENT_SPRITE_IMAGE_PATH
         resized_image_path = resize_image(self.image_path, width, height)
-        self.image = pygame.image.load(resized_image_path)
+        self.image = load(resized_image_path)
 
         self.rect = self.image.get_rect()
-        self.rect.x = const.WINDOW_WIDTH - 200
+        self.rect.x = randint(const.WINDOW_WIDTH - 400, const.WINDOW_WIDTH - 200)
         self.rect.y = randint(const.WINDOW_PADDING, const.WINDOW_HEIGHT - const.WINDOW_PADDING)
 
-    def move_towards_player(self, player_rect: pygame.rect, speed: int):
+    def move_towards_player(self, player_rect: rect):
         if self.rect.x < player_rect.x:
-            self.rect.x += speed
+            self.rect.x += self.speed
 
         if self.rect.x > player_rect.x:
-            self.rect.x -= speed
+            self.rect.x -= self.speed
 
         if self.rect.y < player_rect.y + player_rect.height / 2.5:
-            self.rect.y += speed
+            self.rect.y += self.speed
 
         if self.rect.y > player_rect.y + player_rect.height / 2.5:
-            self.rect.y -= speed
+            self.rect.y -= self.speed
 
     def get_hit(self) -> bool:
         killed = False
@@ -124,3 +121,41 @@ class Opponent(pygame.sprite.Sprite):
                 player_sprite.kill()
 
                 return killed
+
+
+class ShopIcon(Sprite):
+    def __init__(self, x=0, y=0):
+        super().__init__()
+
+        self.image = load(const.SHOP_ICON_IMAGE_PATH)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
+class ShopContainer(Sprite):
+    def __init__(self, screen: Surface, color=const.ORANGE):
+        super().__init__()
+
+        self.image = screen
+
+        self.image.fill(color)
+        self.image.set_colorkey(color)
+
+        self.rect = self.image.get_rect()
+
+
+class ShopItem(Sprite):
+    def __init__(self, image_path, item_pos: dict):
+        super().__init__()
+
+        self.image = load(image_path)
+        self.rect = self.image.get_rect()
+
+        self.rect.x = item_pos['x']
+        self.rect.y = item_pos['y']
+
+
+
+
