@@ -47,6 +47,7 @@ class Arrow(object):
         self.gravity = self.weight * 9.8
         self.time = const.TIME_UNIT
         self.hit = False
+        self.dodge_radius = randint(65, 90)
 
     def gravity_work(self):
         self.y = self.y0 + self.gravity * self.time ** 2 / 2
@@ -86,18 +87,36 @@ class Opponent(Sprite):
         self.rect.x = randint(const.WINDOW_WIDTH - 400, const.WINDOW_WIDTH - 200)
         self.rect.y = randint(const.WINDOW_PADDING, const.WINDOW_HEIGHT - const.WINDOW_PADDING)
 
-    def move_towards_player(self, player_rect: rect):
-        if self.rect.x < player_rect.x:
-            self.rect.x += self.speed
+    def move(self, player_rect: rect, arrows: list):
+        dodge = False
 
-        if self.rect.x > player_rect.x:
-            self.rect.x -= self.speed
+        for arrow in arrows:
+            if (const.WINDOW_WIDTH - const.WINDOW_PADDING) > self.rect.x > const.WINDOW_PADDING \
+                    and (const.WINDOW_HEIGHT - const.WINDOW_PADDING) > self.rect.y > const.WINDOW_PADDING:
+                x_diff_statement = abs(self.rect.x - arrow.x) < arrow.dodge_radius
+                y_diff_statement = abs(self.rect.y - arrow.y) < arrow.dodge_radius
 
-        if self.rect.y < player_rect.y + player_rect.height / 2.5:
-            self.rect.y += self.speed
+                if x_diff_statement and y_diff_statement:
+                    if self.rect.y <= arrow.y:
+                        self.rect.y -= self.speed
+                        dodge = True
 
-        if self.rect.y > player_rect.y + player_rect.height / 2.5:
-            self.rect.y -= self.speed
+                    if self.rect.y >= arrow.y:
+                        self.rect.y += self.speed
+                        dodge = True
+
+        if not dodge:
+            if self.rect.x < player_rect.x:
+                self.rect.x += self.speed
+
+            if self.rect.x > player_rect.x:
+                self.rect.x -= self.speed
+
+            if self.rect.y < player_rect.y + player_rect.height / 2.5:
+                self.rect.y += self.speed
+
+            if self.rect.y > player_rect.y + player_rect.height / 2.5:
+                self.rect.y -= self.speed
 
     def get_hit(self) -> bool:
         killed = False
@@ -155,7 +174,3 @@ class ShopItem(Sprite):
 
         self.rect.x = item_pos['x']
         self.rect.y = item_pos['y']
-
-
-
-

@@ -208,7 +208,7 @@ while True:
 
     for opponent in opponents_group:
         opponent: sprites.Opponent
-        opponent.move_towards_player(player_rect)
+        opponent.move(player_rect, arrows)
         opponent.attack_player(player_sprite, main_loop_counter)
 
     show_points(player_sprite.points)
