@@ -121,9 +121,14 @@ def update_sprite_groups():
 
 while True:
     main_loop_counter += 1
-
+    stop_the_game = False
     key_pressed = pygame.key.get_pressed()
-    player_rect = player_group.sprites()[0].rect
+
+    if player_group.sprites():
+        player_rect = player_group.sprites()[0].rect
+    else:
+        player_rect = None
+        stop_the_game = True
 
     screen.fill(const.WHITE)
 
@@ -142,6 +147,9 @@ while True:
     if shop_displayed:
         show_shop_menu()
 
+        stop_the_game = True
+
+    if stop_the_game:
         continue
 
     if (key_pressed[pygame.K_LEFT] or key_pressed[pygame.K_a]) \
@@ -183,12 +191,12 @@ while True:
         else:
             pass
 
-    if len(opponents_group) < 2:
+    if len(opponents_group) < 10 and (main_loop_counter < 10 or main_loop_counter % 100 == 0):
         opponent_sprite = sprites.Opponent(
             width=const.OPPONENT_WIDTH,
             height=const.OPPONENT_HEIGHT,
-            resistance=randint(1, 5),
-            speed=2 + main_loop_counter / 10000
+            resistance=randint(1, 2),
+            speed=2 + main_loop_counter / 5000
         )
 
         opponents_group.add(opponent_sprite)

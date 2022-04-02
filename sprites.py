@@ -97,11 +97,11 @@ class Opponent(Sprite):
                 y_diff_statement = abs(self.rect.y - arrow.y) < arrow.dodge_radius
 
                 if x_diff_statement and y_diff_statement:
-                    if self.rect.y <= arrow.y:
+                    if arrow.y >= self.rect.y > const.WINDOW_PADDING + player_rect.height / 2.5:
                         self.rect.y -= self.speed
                         dodge = True
 
-                    if self.rect.y >= arrow.y:
+                    if arrow.y <= self.rect.y < const.WINDOW_HEIGHT - const.WINDOW_PADDING - player_rect.height / 2.5:
                         self.rect.y += self.speed
                         dodge = True
 
